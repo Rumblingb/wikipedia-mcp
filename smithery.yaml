@@ -1,0 +1,20 @@
+name: wikipedia-mcp
+displayName: Wikipedia MCP Server
+description: >-
+  Free knowledge access for AI agents. Search, read, and explore millions of
+  Wikipedia articles with zero API keys. 7 tools: search, read articles, get
+  summaries, browse categories, discover language versions, random articles,
+  and page metadata.
+
+homepage: https://rumblingb.github.io/wikipedia-mcp/
+repository: https://github.com/Rumblingb/wikipedia-mcp
+runtime: python
+license: MIT
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction: |
+    (config) => ({command: 'python3', args: ['server.py']})
