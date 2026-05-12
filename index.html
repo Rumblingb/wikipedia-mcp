@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wikipedia MCP Server — Free Knowledge Access for AI Agents</title>
+<meta name="description" content="Search, read, and explore 6.8M+ Wikipedia articles with zero API keys. MCP server for Claude, Cursor, and AI agents. Free tier available, Pro from $19/mo.">
+<meta property="og:title" content="Wikipedia MCP Server — Free Knowledge for AI Agents">
+<meta property="og:description" content="7 tools: search, read articles, summaries, categories, languages, random, metadata. Zero API keys.">
+<meta property="og:type" content="website">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#fafbfc;color:#1a1a2e;line-height:1.6}
+  .container{max-width:960px;margin:0 auto;padding:0 24px}
+  header{padding:80px 0 48px;text-align:center;border-bottom:1px solid #e5e7eb}
+  h1{font-size:42px;font-weight:800;letter-spacing:-0.02em;color:#0f172a;margin-bottom:16px}
+  h2{font-size:28px;font-weight:700;margin:48px 0 16px;color:#0f172a}
+  h3{font-size:20px;font-weight:600;margin:24px 0 12px}
+  .subtitle{font-size:20px;color:#475569;max-width:640px;margin:0 auto 32px;font-weight:400}
+  .cta-group{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{padding:12px 28px;border-radius:8px;font-weight:600;font-size:16px;text-decoration:none;transition:all 0.15s ease;display:inline-flex;align-items:center;gap:8px}
+  .btn-primary{background:#0284c7;color:#fff}
+  .btn-primary:hover{background:#0369a1}
+  .btn-secondary{background:#fff;color:#0f172a;border:2px solid #e2e8f0}
+  .btn-secondary:hover{border-color:#94a3b8}
+  .arch-diagram{background:#0f172a;border-radius:16px;padding:40px;margin:32px 0;overflow-x:auto}
+  .arch-diagram pre{color:#e2e8f0;font-family:"JetBrains Mono","Fira Code",monospace;font-size:13px;line-height:1.5;white-space:pre}
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:24px 0}
+  .tool-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;transition:box-shadow .15s}
+  .tool-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+  .tool-card h4{font-size:16px;font-weight:700;margin-bottom:8px;font-family:"JetBrains Mono",monospace;color:#0284c7}
+  .tool-card p{color:#475569;font-size:14px;line-height:1.5}
+  .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:24px 0}
+  .price-card{background:#fff;border:1px solid #e5e8f0;border-radius:12px;padding:28px;text-align:center}
+  .price-card.featured{border-color:#0284c7;border-width:2px;position:relative}
+  .price-card.featured::before{content:"Popular";position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#0284c7;color:#fff;padding:4px 16px;border-radius:20px;font-size:12px;font-weight:600}
+  .price{font-size:36px;font-weight:800;color:#0f172a;margin:8px 0}
+  .price span{font-size:16px;font-weight:500;color:#64748b}
+  .features-list{list-style:none;text-align:left;margin:16px 0}
+  .features-list li{padding:6px 0;font-size:14px;color:#475569;display:flex;align-items:center;gap:8px}
+  code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-family:"JetBrains Mono",monospace;font-size:13px}
+  pre{background:#0f172a;color:#e2e8f0;padding:20px;border-radius:12px;overflow-x:auto;margin:16px 0}
+  pre code{background:transparent;color:inherit;padding:0}
+  .stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin:32px 0}
+  .stat-item{text-align:center}
+  .stat-number{font-size:40px;font-weight:800;color:#0284c7}
+  .stat-label{font-size:14px;color:#64748b;margin-top:4px}
+  .faq-item{margin-bottom:16px}
+  .faq-item h4{font-size:16px;font-weight:600;margin-bottom:4px}
+  .faq-item p{color:#475569;font-size:14px}
+  footer{padding:48px 0;text-align:center;color:#94a3b8;font-size:14px;border-top:1px solid #e5e7eb;margin-top:64px}
+  footer a{color:#0284c7;text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <h1>Wikipedia<br>MCP Server</h1>
+    <p class="subtitle">Free knowledge access for AI agents. Search, read, and explore 6.8M+ Wikipedia articles with zero API keys. 7 tools, 300+ languages, CC-BY-SA licensed.</p>
+    <div class="cta-group">
+      <a href="https://github.com/Rumblingb/wikipedia-mcp" class="btn btn-secondary">GitHub →</a>
+      <a href="https://buy.stripe.com/14k3cxflRabW9PW1AD1oI0r" class="btn btn-primary">Pro — $19/mo</a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="arch-diagram">
+    <pre>
+┌──────────────┐     stdio/JSON-RPC      ┌──────────────────┐     HTTPS      ┌──────────────────┐
+│  AI Agent     │ ◄──────────────────────► │  Wikipedia MCP   │ ◄────────────► │  Wikipedia REST  │
+│  (Claude, etc)│                         │  Server (Python)  │                │  API (Free, No   │
+└──────────────┘                         └──────────────────┘                │  Auth Required)   │
+                                                                              └──────────────────┘
+    </pre>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item"><div class="stat-number">7</div><div class="stat-label">MCP Tools</div></div>
+    <div class="stat-item"><div class="stat-number">6.8M+</div><div class="stat-label">English Articles</div></div>
+    <div class="stat-item"><div class="stat-number">300+</div><div class="stat-label">Languages</div></div>
+    <div class="stat-item"><div class="stat-number">0</div><div class="stat-label">API Keys Needed</div></div>
+  </div>
+
+  <h2>Tools</h2>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <h4>wiki_search</h4>
+      <p>Search Wikipedia by natural language query. Returns titles, snippets with highlights, word counts, and direct URLs.</p>
+    </div>
+    <div class="tool-card">
+      <h4>wiki_get_article</h4>
+      <p>Get full article text as markdown with section headings. Control with max_sections for large articles.</p>
+    </div>
+    <div class="tool-card">
+      <h4>wiki_get_summary</h4>
+      <p>Quick 2-5 sentence extract plus metadata. Perfect for fact-checking and trivia.</p>
+    </div>
+    <div class="tool-card">
+      <h4>wiki_get_categories</h4>
+      <p>Navigate the knowledge graph — all categories an article belongs to, filtered for relevance.</p>
+    </div>
+    <div class="tool-card">
+      <h4>wiki_get_languages</h4>
+      <p>Available translations with language codes, native names, and full URLs. 300+ languages.</p>
+    </div>
+    <div class="tool-card">
+      <h4>wiki_random</h4>
+      <p>Serendipitous discovery — random article with summary. Great for exploration.</p>
+    </div>
+    <div class="tool-card">
+      <h4>wiki_page_info</h4>
+      <p>Page metadata: size, last modified, content model, redirect status, preview.</p>
+    </div>
+  </div>
+
+  <h2>Example Usage</h2>
+  <pre><code># Agent asks: "What's the capital of Bhutan?"
+→ wiki_get_summary("Thimphu")
+→ "Thimphu is the capital and largest city of Bhutan..."
+
+# Agent asks: "Find articles about quantum computing"
+→ wiki_search("quantum computing")
+→ 12 results: "Quantum computing", "Timeline of quantum computing..."
+
+# Agent asks: "What categories is Python in?"
+→ wiki_get_categories("Python (programming language)")
+→ ["Programming languages", "Class-based programming languages", ...]
+
+# Agent asks: "Show me a random article"
+→ wiki_random()
+→ 🎲 "Hygrophorus agathosmus" — A species of fungus in the genus...</code></pre>
+
+  <h2>Pricing</h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Free</h3>
+      <div class="price">$0<span>/mo</span></div>
+      <ul class="features-list">
+        <li>✅ 50 queries/month</li>
+        <li>✅ All 7 tools</li>
+        <li>✅ 300+ languages</li>
+        <li>✅ Markdown + JSON</li>
+        <li>✅ Community support</li>
+      </ul>
+      <a href="https://github.com/Rumblingb/wikipedia-mcp" class="btn btn-secondary" style="margin-top:16px;width:100%;justify-content:center">Get Started</a>
+    </div>
+    <div class="price-card featured">
+      <h3>Pro</h3>
+      <div class="price">$19<span>/mo</span></div>
+      <ul class="features-list">
+        <li>✅ Unlimited queries</li>
+        <li>✅ All 7 tools</li>
+        <li>✅ 300+ languages</li>
+        <li>✅ Priority support</li>
+        <li>✅ Early access to new tools</li>
+      </ul>
+      <a href="https://buy.stripe.com/14k3cxflRabW9PW1AD1oI0r" class="btn btn-primary" style="margin-top:16px;width:100%;justify-content:center">Subscribe →</a>
+    </div>
+    <div class="price-card">
+      <h3>Enterprise</h3>
+      <div class="price">$99<span>/mo</span></div>
+      <ul class="features-list">
+        <li>✅ Everything in Pro</li>
+        <li>✅ Custom SLA</li>
+        <li>✅ Dedicated support</li>
+        <li>✅ On-prem deployment</li>
+        <li>✅ Custom integrations</li>
+      </ul>
+      <a href="mailto:support@agentpay.so" class="btn btn-secondary" style="margin-top:16px;width:100%;justify-content:center">Contact Us</a>
+    </div>
+  </div>
+
+  <h2>FAQ</h2>
+  <div class="faq-item"><h4>Is this really free? No API key?</h4><p>Yes. Wikipedia's API is public and requires no authentication. The free tier gives you 50 queries/month through this MCP server.</p></div>
+  <div class="faq-item"><h4>Which clients does it work with?</h4><p>Claude Desktop, Cursor, VS Code, Windsurf, Continue.dev, and any MCP-compatible client. Three-line JSON config to add.</p></div>
+  <div class="faq-item"><h4>How is this different from hitting the Wikipedia API directly?</h4><p>Agent-friendly markdown output, automatic truncation with guidance, category filtering, error recovery with actionable next steps, and full MCP protocol compliance.</p></div>
+  <div class="faq-item"><h4>Which languages are supported?</h4><p>300+ Wikipedia language editions from Afrikaans to Zulu. Use the language parameter on any tool (e.g., language="ja" for Japanese).</p></div>
+</main>
+
+<footer>
+  <div class="container">
+    Built by <a href="https://agentpay.so">AgentPay Labs</a> — Governed payment middleware for AI agents.
+    Content from Wikipedia under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+  </div>
+</footer>
+</body>
+</html>
